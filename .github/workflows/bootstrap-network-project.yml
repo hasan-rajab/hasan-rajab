@@ -1,0 +1,71 @@
+name: bootstrap-network-traffic-project
+
+on:
+  push:
+    branches: [network-traffic-forecasting]
+
+permissions:
+  contents: write
+
+env:
+  PYTHONHASHSEED: "20261002"
+
+jobs:
+  bootstrap-run:
+    runs-on: ubuntu-latest
+    timeout-minutes: 55
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: network-traffic-forecasting
+          fetch-depth: 0
+
+      - name: Decode verified project archive
+        shell: bash
+        run: |
+          base64 -d .bootstrap/network-project.tar.gz.b64 > /tmp/network-project.tar.gz
+          echo "9447a689aeb45f64f01600d965471f58fed973b261fe1aa11c7da3c48825b365  /tmp/network-project.tar.gz" | sha256sum -c -
+          git rm -rf .
+          tar -xzf /tmp/network-project.tar.gz
+          rm -rf .pytest_cache **/__pycache__ || true
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+          cache: pip
+
+      - name: Install pinned dependencies
+        run: pip install -r requirements.txt
+
+      - name: Run complete project
+        run: make all
+
+      - name: Show generated outputs
+        if: always()
+        run: |
+          echo "=== results ==="
+          find results -maxdepth 1 -type f -printf '%f\n' | sort || true
+          echo "=== figures ==="
+          find figures -maxdepth 1 -type f -printf '%f\n' | sort || true
+
+      - name: Upload measured artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: network-traffic-results
+          path: |
+            results/
+            figures/
+            data/processed/
+            README.md
+          if-no-files-found: warn
+          retention-days: 14
+
+      - name: Commit complete project and measured results
+        if: success()
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add -A
+          git commit -m "Build telecom traffic forecasting project with measured results [skip ci]"
+          git push origin HEAD:network-traffic-forecasting
