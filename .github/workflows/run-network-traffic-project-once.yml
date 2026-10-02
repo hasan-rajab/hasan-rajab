@@ -22,11 +22,13 @@ jobs:
           ref: network-traffic-forecasting
           fetch-depth: 0
 
-      - name: Decode verified project archive
+      - name: Reassemble and verify project archive
         shell: bash
         run: |
-          base64 -d .bootstrap/network-project.tar.gz.b64 > /tmp/network-project.tar.gz
-          echo "9447a689aeb45f64f01600d965471f58fed973b261fe1aa11c7da3c48825b365  /tmp/network-project.tar.gz" | sha256sum -c -
+          cat .bootstrap/chunks/part00.b64 .bootstrap/chunks/part01.b64 .bootstrap/chunks/part02.b64 > /tmp/network-project.tar.gz.b64
+          echo "0e649c246be452343a214bd0d0b4d513b1510f79dd3ecfa428c7c6ac357a7f52  /tmp/network-project.tar.gz.b64" | sha256sum -c -
+          base64 -d /tmp/network-project.tar.gz.b64 > /tmp/network-project.tar.gz
+          echo "69df4de07a729f141772d0e82103985613550b47ff55bbea7c16ccdabe353ab4  /tmp/network-project.tar.gz" | sha256sum -c -
           git rm -rf .
           tar -xzf /tmp/network-project.tar.gz
           rm -rf .pytest_cache **/__pycache__ || true
