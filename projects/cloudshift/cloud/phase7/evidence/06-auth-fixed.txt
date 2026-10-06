@@ -1,0 +1,72 @@
+CloudShift Phase 7 Evidence — 06-auth-fixed
+Captured: 2026-08-11T19:30:36Z
+
+=== Containers ===
+NAME                       IMAGE                    COMMAND                  SERVICE      CREATED          STATUS                    PORTS
+cloudshift-p6-api          phase6-api               "sh -c 'exec uvicorn…"   api          19 seconds ago   Up 16 seconds             0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+cloudshift-p6-db           postgres:16-alpine       "docker-entrypoint.s…"   db           42 minutes ago   Up 42 minutes (healthy)   5432/tcp
+cloudshift-p6-frontend     phase6-frontend          "/docker-entrypoint.…"   frontend     42 minutes ago   Up 42 minutes             0.0.0.0:3000->8080/tcp, [::]:3000->8080/tcp
+cloudshift-p6-grafana      grafana/grafana:12.1.0   "/run.sh"                grafana      42 minutes ago   Up 42 minutes             0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
+cloudshift-p6-prometheus   prom/prometheus:v3.5.0   "/bin/prometheus --c…"   prometheus   42 minutes ago   Up 42 minutes             0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+cloudshift-p6-shipping     phase6-shipping          "uvicorn app:app --h…"   shipping     20 seconds ago   Up 16 seconds             0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+
+=== API health ===
+HTTP/1.1 200 OK
+date: Tue, 11 Aug 2026 19:30:37 GMT
+server: uvicorn
+content-length: 84
+content-type: application/json
+x-request-id: 0400e8d7-11d2-48f4-80bb-94207f617b06
+
+{"status":"healthy","database":"connected","version":"1.0.0","environment":"phase6"}
+=== Prometheus target ===
+{"metric": {"__name__": "up", "instance": "api:8080", "job": "cloudshift-api"}, "value": "1"}
+
+=== 5xx rate ===
+{"metric": {}, "value": "0.021268873317605158"}
+
+=== API P95 ===
+{"metric": {}, "value": "1.9988326022110772"}
+
+=== Shipping timeout total ===
+NO_DATA
+
+=== Shipping auth failure total ===
+NO_DATA
+
+=== Audit events ===
+{"count":10,"events":[{"outcome":"success","metadata":{"latency_ms":154.56},"event_id":"c14efec9-cbc6-4e9b-98fb-d3ee6f4083e8","event_type":"SHIPPING_QUOTE_SUCCEEDED","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:26.729600+00:00","environment":"phase6","customer_id":null},{"outcome":"success","metadata":{"latency_ms":155.84},"event_id":"e6e8b00c-7e82-49a7-981f-3d837bc0d95e","event_type":"SHIPPING_QUOTE_SUCCEEDED","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:26.522906+00:00","environment":"phase6","customer_id":null},{"outcome":"success","metadata":{"latency_ms":154.71},"event_id":"bd0bbe69-5bc7-40d4-b135-47745304d8ca","event_type":"SHIPPING_QUOTE_SUCCEEDED","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:26.323695+00:00","environment":"phase6","customer_id":null},{"outcome":"success","metadata":{"latency_ms":153.74},"event_id":"9f4f2c52-9e30-49eb-b1a9-74865ed05fd8","event_type":"SHIPPING_QUOTE_SUCCEEDED","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:26.123898+00:00","environment":"phase6","customer_id":null},{"outcome":"success","metadata":{"latency_ms":167.18},"event_id":"70fc2774-b5f9-4310-a6b8-a136742e909d","event_type":"SHIPPING_QUOTE_SUCCEEDED","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:25.894603+00:00","environment":"phase6","customer_id":null},{"outcome":"failure","event_id":"993fdd26-c051-4b08-85ad-08ff3f5c7495","metadata":{"upstream_status":401},"event_type":"SHIPPING_AUTH_FAILURE","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:05.302634+00:00","customer_id":null,"environment":"phase6"},{"outcome":"failure","event_id":"7d45efe6-efc2-4273-86e8-6a28540cc56c","metadata":{"upstream_status":401},"event_type":"SHIPPING_AUTH_FAILURE","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:05.229300+00:00","customer_id":null,"environment":"phase6"},{"outcome":"failure","event_id":"f6a8142b-665f-406e-8464-be8508f16d35","metadata":{"upstream_status":401},"event_type":"SHIPPING_AUTH_FAILURE","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:05.149080+00:00","customer_id":null,"environment":"phase6"},{"outcome":"failure","event_id":"b04b1356-4a0e-43a1-8740-1686c1676d85","metadata":{"upstream_status":401},"event_type":"SHIPPING_AUTH_FAILURE","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:05.074327+00:00","customer_id":null,"environment":"phase6"},{"outcome":"failure","event_id":"c2f41e21-2b64-47c2-95f6-6b0f033a8f85","metadata":{"upstream_status":401},"event_type":"SHIPPING_AUTH_FAILURE","order_id":1,"service":"CloudShift","request_id":null,"timestamp":"2026-08-11T19:30:04.998280+00:00","customer_id":null,"environment":"phase6"}]}
+=== Structured logs ===
+INFO:     Started server process [1]
+INFO:     Waiting for application startup.
+{"severity":"INFO","message":"database tables verified","timestamp":"2026-08-11T19:30:24.850302+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift"}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://0.0.0.0:8080 (Press CTRL+C to quit)
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:25.663849+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"cb767364-8df3-4b16-a958-66e18f31ed1c","http_method":"GET","http_path":"/health","http_status":200,"latency_ms":4.83}
+INFO:     192.168.65.1:61578 - "GET /health HTTP/1.1" 200 OK
+{"severity":"INFO","message":"audit_event_written","timestamp":"2026-08-11T19:30:25.946313+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift.audit","event":"audit_event_written","event_type":"SHIPPING_QUOTE_SUCCEEDED","audit_event_id":"70fc2774-b5f9-4310-a6b8-a136742e909d","order_id":1,"customer_id":null,"outcome":"success","firestore_write_ms":51.55,"request_id":null}
+{"severity":"INFO","message":"shipping_quote_success","timestamp":"2026-08-11T19:30:25.946556+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"shipping_quote_success","order_id":1,"dependency":"shipping","latency_ms":167.18}
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:25.947629+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"a7a0fdaa-fcc2-423b-bd95-0b016c0b93df","http_method":"GET","http_path":"/orders/1/shipping-quote","http_status":200,"latency_ms":243.73}
+INFO:     192.168.65.1:54289 - "GET /orders/1/shipping-quote HTTP/1.1" 200 OK
+{"severity":"INFO","message":"audit_event_written","timestamp":"2026-08-11T19:30:26.135143+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift.audit","event":"audit_event_written","event_type":"SHIPPING_QUOTE_SUCCEEDED","audit_event_id":"9f4f2c52-9e30-49eb-b1a9-74865ed05fd8","order_id":1,"customer_id":null,"outcome":"success","firestore_write_ms":11.09,"request_id":null}
+{"severity":"INFO","message":"shipping_quote_success","timestamp":"2026-08-11T19:30:26.135362+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"shipping_quote_success","order_id":1,"dependency":"shipping","latency_ms":153.74}
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:26.136338+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"a517c344-c174-416a-b9d3-3e3bef685c2e","http_method":"GET","http_path":"/orders/1/shipping-quote","http_status":200,"latency_ms":168.66}
+INFO:     192.168.65.1:65219 - "GET /orders/1/shipping-quote HTTP/1.1" 200 OK
+{"severity":"INFO","message":"audit_event_written","timestamp":"2026-08-11T19:30:26.336038+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift.audit","event":"audit_event_written","event_type":"SHIPPING_QUOTE_SUCCEEDED","audit_event_id":"bd0bbe69-5bc7-40d4-b135-47745304d8ca","order_id":1,"customer_id":null,"outcome":"success","firestore_write_ms":12.27,"request_id":null}
+{"severity":"INFO","message":"shipping_quote_success","timestamp":"2026-08-11T19:30:26.336337+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"shipping_quote_success","order_id":1,"dependency":"shipping","latency_ms":154.71}
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:26.337432+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"5d30219f-5382-4c3c-af53-562965fa412a","http_method":"GET","http_path":"/orders/1/shipping-quote","http_status":200,"latency_ms":173.77}
+INFO:     192.168.65.1:59422 - "GET /orders/1/shipping-quote HTTP/1.1" 200 OK
+{"severity":"INFO","message":"audit_event_written","timestamp":"2026-08-11T19:30:26.535837+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift.audit","event":"audit_event_written","event_type":"SHIPPING_QUOTE_SUCCEEDED","audit_event_id":"e6e8b00c-7e82-49a7-981f-3d837bc0d95e","order_id":1,"customer_id":null,"outcome":"success","firestore_write_ms":12.86,"request_id":null}
+{"severity":"INFO","message":"shipping_quote_success","timestamp":"2026-08-11T19:30:26.536368+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"shipping_quote_success","order_id":1,"dependency":"shipping","latency_ms":155.84}
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:26.537883+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"399b0a94-765f-404d-a0ce-4f0745b84d3f","http_method":"GET","http_path":"/orders/1/shipping-quote","http_status":200,"latency_ms":174.46}
+INFO:     192.168.65.1:28468 - "GET /orders/1/shipping-quote HTTP/1.1" 200 OK
+{"severity":"INFO","message":"audit_event_written","timestamp":"2026-08-11T19:30:26.739923+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift.audit","event":"audit_event_written","event_type":"SHIPPING_QUOTE_SUCCEEDED","audit_event_id":"c14efec9-cbc6-4e9b-98fb-d3ee6f4083e8","order_id":1,"customer_id":null,"outcome":"success","firestore_write_ms":10.26,"request_id":null}
+{"severity":"INFO","message":"shipping_quote_success","timestamp":"2026-08-11T19:30:26.740125+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"shipping_quote_success","order_id":1,"dependency":"shipping","latency_ms":154.56}
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:26.741291+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"ddd3b498-fe57-4817-af04-e300186b70b6","http_method":"GET","http_path":"/orders/1/shipping-quote","http_status":200,"latency_ms":170.54}
+INFO:     192.168.65.1:48118 - "GET /orders/1/shipping-quote HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:28.866232+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"412f0001-7795-44d2-8c2d-671f8c544a23","http_method":"GET","http_path":"/metrics","http_status":200,"latency_ms":23.98}
+INFO:     172.18.0.6:42146 - "GET /metrics HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:37.122171+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"0400e8d7-11d2-48f4-80bb-94207f617b06","http_method":"GET","http_path":"/health","http_status":200,"latency_ms":2.38}
+INFO:     192.168.65.1:16675 - "GET /health HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:30:38.065714+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"0d62a790-9cfa-46cf-a187-0b3a1c21a04d","http_method":"GET","http_path":"/audit-events","http_status":200,"latency_ms":60.94}
+INFO:     192.168.65.1:48161 - "GET /audit-events?limit=10 HTTP/1.1" 200 OK

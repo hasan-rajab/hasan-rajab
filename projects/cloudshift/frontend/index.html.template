@@ -1,0 +1,81 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>GulfSupply Inventory Portal</title>
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; }
+    h1 { margin-bottom: 4px; }
+    .muted { color: #666; }
+    .card { border: 1px solid #ddd; border-radius: 10px; padding: 16px; margin: 16px 0; }
+    button { padding: 8px 14px; cursor: pointer; }
+    input { padding: 8px; margin: 4px; width: 100px; }
+    pre { background: #f6f6f6; padding: 12px; overflow-x: auto; }
+  </style>
+</head>
+<body>
+  <h1>GulfSupply Inventory Portal</h1>
+  <div class="muted">Legacy application — local Docker environment</div>
+
+  <div class="card">
+    <h2>Service Health</h2>
+    <button onclick="checkHealth()">Check Health</button>
+    <pre id="health">Not checked yet.</pre>
+  </div>
+
+  <div class="card">
+    <h2>Products</h2>
+    <button onclick="loadProducts()">Load Products</button>
+    <pre id="products">No products loaded.</pre>
+  </div>
+
+  <div class="card">
+    <h2>Create Order</h2>
+    <label>Customer ID <input id="customerId" type="number" value="1"></label>
+    <label>Product ID <input id="productId" type="number" value="1"></label>
+    <label>Quantity <input id="quantity" type="number" value="1"></label>
+    <button onclick="createOrder()">Create Order</button>
+    <pre id="order">No order created.</pre>
+  </div>
+
+<script>
+const API = "${API_URL}";
+
+async function showJson(id, promise) {
+  try {
+    const r = await promise;
+    const text = await r.text();
+    document.getElementById(id).textContent =
+      `HTTP ${r.status}\n` + (text || "(empty response)");
+  } catch (err) {
+    document.getElementById(id).textContent = `Request failed: ${err}`;
+  }
+}
+
+function checkHealth() {
+  return showJson("health", fetch(`${API}/health`));
+}
+
+function loadProducts() {
+  return showJson("products", fetch(`${API}/products`));
+}
+
+function createOrder() {
+  const payload = {
+    customer_id: Number(document.getElementById("customerId").value),
+    items: [{
+      product_id: Number(document.getElementById("productId").value),
+      quantity: Number(document.getElementById("quantity").value)
+    }]
+  };
+
+  return showJson("order", fetch(`${API}/orders`, {
+    method: "POST",
+    headers: {"Content-Type": "application/json"},
+    body: JSON.stringify(payload)
+  }));
+}
+</script>
+</body>
+</html>

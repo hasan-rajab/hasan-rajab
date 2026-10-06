@@ -1,0 +1,20 @@
+Query Plan
+----------
+Index Scan using idx_orders_customer_created_at on orders  (cost=0.42..3037.43 rows=25258 width=24) (actual time=0.078..11.024 rows=25000 loops=1)
+  Index Cond: (customer_id = '3'::smallint)
+  Buffers: shared hit=24867 read=97
+Planning:
+  Buffers: shared hit=80 read=1
+Planning Time: 2.859 ms
+Execution Time: 12.377 ms
+
+Customer Order Query Benchmark
+------------------------------
+Customer ID:     3
+Rows returned:   25,000
+Runs:            20
+Average:         66.38 ms
+Median:          62.06 ms
+P95:             86.67 ms
+Fastest:         48.31 ms
+Slowest:         98.18 ms

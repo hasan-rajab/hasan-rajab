@@ -1,0 +1,74 @@
+services:
+  frontend:
+    build:
+      context: ../../frontend
+      dockerfile: Dockerfile.cloud
+    container_name: cloudshift-cloudsim-frontend
+    environment:
+      API_URL: http://localhost:8080
+    ports:
+      - "3000:8080"
+    depends_on:
+      - api
+
+  api:
+    build:
+      context: ../..
+      dockerfile: Dockerfile
+    container_name: cloudshift-cloudsim-api
+    environment:
+      PORT: 8080
+      APP_NAME: CloudShift
+      APP_ENV: cloud-sim
+      CORS_ORIGINS: http://localhost:3000
+
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: cloudshift
+      DB_USER: cloudshift
+      DB_PASSWORD: cloudshift_dev
+
+      DB_POOL_SIZE: 5
+      DB_MAX_OVERFLOW: 5
+      DB_POOL_TIMEOUT: 10
+      DB_TEST_DELAY_SECONDS: 0
+
+      SHIPPING_BASE_URL: http://shipping:9000
+      SHIPPING_TIMEOUT_SECONDS: 2
+      SHIPPING_API_TOKEN: cloudshift-demo-token
+      SCENARIO_BAD_HTTP_STATUS: "false"
+    ports:
+      - "8080:8080"
+    depends_on:
+      db:
+        condition: service_healthy
+      shipping:
+        condition: service_started
+
+  shipping:
+    build:
+      context: ../../mock_shipping
+    container_name: cloudshift-cloudsim-shipping
+    environment:
+      SHIPPING_DELAY_SECONDS: 0.15
+      SHIPPING_REQUIRED_TOKEN: cloudshift-demo-token
+    ports:
+      - "9000:9000"
+
+  db:
+    image: postgres:16-alpine
+    container_name: cloudshift-cloudsim-db
+    environment:
+      POSTGRES_DB: cloudshift
+      POSTGRES_USER: cloudshift
+      POSTGRES_PASSWORD: cloudshift_dev
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudshift -d cloudshift"]
+      interval: 3s
+      timeout: 3s
+      retries: 20
+    volumes:
+      - cloudshift_cloudsim_pgdata:/var/lib/postgresql/data
+
+volumes:
+  cloudshift_cloudsim_pgdata:

@@ -1,0 +1,74 @@
+services:
+  frontend:
+    image: nginx:1.27-alpine
+    container_name: cloudshift-frontend
+    ports:
+      - "3000:80"
+    volumes:
+      - ./frontend/index.html:/usr/share/nginx/html/index.html:ro
+      - ./frontend/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+    depends_on:
+      - api
+
+  api:
+    build: .
+    container_name: cloudshift-api
+    ports:
+      - "8000:8000"
+    environment:
+      APP_NAME: CloudShift
+      APP_ENV: local
+      LOG_LEVEL: INFO
+
+      DB_HOST: db
+      DB_PORT: 5432
+      DB_NAME: cloudshift
+      DB_USER: cloudshift
+      DB_PASSWORD: cloudshift_dev
+
+      DB_POOL_SIZE: 5
+      DB_MAX_OVERFLOW: 10
+      DB_POOL_TIMEOUT: 30
+      DB_TEST_DELAY_SECONDS: 0
+
+      SHIPPING_BASE_URL: http://shipping:9000
+      SHIPPING_TIMEOUT_SECONDS: 1.0
+      SHIPPING_API_TOKEN: cloudshift-demo-token
+
+      SCENARIO_BAD_HTTP_STATUS: "false"
+
+    depends_on:
+      db:
+        condition: service_healthy
+      shipping:
+        condition: service_started
+
+  shipping:
+    build:
+      context: ./mock_shipping
+    container_name: cloudshift-shipping
+    environment:
+      SHIPPING_DELAY_SECONDS: 0.15
+      SHIPPING_REQUIRED_TOKEN: cloudshift-demo-token
+    ports:
+      - "9000:9000"
+
+  db:
+    image: postgres:16-alpine
+    container_name: cloudshift-db
+    environment:
+      POSTGRES_DB: cloudshift
+      POSTGRES_USER: cloudshift
+      POSTGRES_PASSWORD: cloudshift_dev
+    ports:
+      - "5432:5432"
+    volumes:
+      - cloudshift_pgdata:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U cloudshift -d cloudshift"]
+      interval: 5s
+      timeout: 5s
+      retries: 10
+
+volumes:
+  cloudshift_pgdata:

@@ -1,0 +1,13 @@
+HTTP Load Test
+--------------
+URL:          http://localhost:8080/diagnostics/db-work
+Requests:     200
+Concurrency:  50
+Successful:   6
+Failed:       194
+Statuses:     {200: 6, 503: 194}
+Average:      297.02 ms
+Median:       274.38 ms
+P95:          425.77 ms
+P99:          760.37 ms
+Throughput:   124.64 req/s

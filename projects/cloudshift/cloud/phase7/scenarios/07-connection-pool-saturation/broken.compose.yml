@@ -1,0 +1,7 @@
+services:
+  api:
+    environment:
+      DB_POOL_SIZE: 2
+      DB_MAX_OVERFLOW: 0
+      DB_POOL_TIMEOUT: 0.2
+      DB_TEST_DELAY_SECONDS: 0.5

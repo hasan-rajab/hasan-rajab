@@ -1,0 +1,12 @@
+FROM nginx:1.27-alpine
+
+RUN apk add --no-cache gettext
+
+COPY index.html.template /templates/index.html.template
+COPY nginx.conf /etc/nginx/conf.d/default.conf
+
+ENV API_URL=http://localhost:8000
+
+EXPOSE 8080
+
+CMD ["sh", "-c", "envsubst '$API_URL' < /templates/index.html.template > /usr/share/nginx/html/index.html && sed -i 's/listen 80;/listen 8080;/' /etc/nginx/conf.d/default.conf && exec nginx -g 'daemon off;'"]

@@ -1,0 +1,37 @@
+CloudShift Phase 7 Evidence — 04-container-broken
+Captured: 2026-08-11T19:28:59Z
+
+=== Containers ===
+NAME                       IMAGE                    COMMAND                  SERVICE      CREATED          STATUS                    PORTS
+cloudshift-p6-api          phase6-api               "sh -c 'uvicorn app.…"   api          17 seconds ago   Up 13 seconds             0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+cloudshift-p6-db           postgres:16-alpine       "docker-entrypoint.s…"   db           40 minutes ago   Up 40 minutes (healthy)   5432/tcp
+cloudshift-p6-frontend     phase6-frontend          "/docker-entrypoint.…"   frontend     40 minutes ago   Up 40 minutes             0.0.0.0:3000->8080/tcp, [::]:3000->8080/tcp
+cloudshift-p6-grafana      grafana/grafana:12.1.0   "/run.sh"                grafana      40 minutes ago   Up 40 minutes             0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
+cloudshift-p6-prometheus   prom/prometheus:v3.5.0   "/bin/prometheus --c…"   prometheus   40 minutes ago   Up 40 minutes             0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+cloudshift-p6-shipping     phase6-shipping          "uvicorn app:app --h…"   shipping     34 seconds ago   Up 31 seconds             0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+
+=== API health ===
+
+=== Prometheus target ===
+{"metric": {"__name__": "up", "instance": "api:8080", "job": "cloudshift-api"}, "value": "0"}
+
+=== 5xx rate ===
+{"metric": {}, "value": "0.03333333333333333"}
+
+=== API P95 ===
+{"metric": {}, "value": "2.254379334660906"}
+
+=== Shipping timeout total ===
+NO_DATA
+
+=== Shipping auth failure total ===
+NO_DATA
+
+=== Audit events ===
+
+=== Structured logs ===
+INFO:     Started server process [7]
+INFO:     Waiting for application startup.
+{"severity":"INFO","message":"database tables verified","timestamp":"2026-08-11T19:28:56.889130+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift"}
+INFO:     Application startup complete.
+INFO:     Uvicorn running on http://127.0.0.1:8080 (Press CTRL+C to quit)

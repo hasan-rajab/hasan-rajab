@@ -1,0 +1,16 @@
+__pycache__/
+*.py[cod]
+*.db
+.env
+.venv/
+venv/
+.pytest_cache/
+.DS_Store
+# CloudShift local/runtime artifacts
+cloud/phase5/phase5.env
+*.log
+grafana-data/
+prometheus-data/
+firestore-data/
+
+reproduction-output/

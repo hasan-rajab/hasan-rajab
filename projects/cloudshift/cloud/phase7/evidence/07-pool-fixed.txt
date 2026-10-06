@@ -1,0 +1,99 @@
+CloudShift Phase 7 Evidence — 07-pool-fixed
+Captured: 2026-08-11T19:31:25Z
+
+=== Containers ===
+NAME                       IMAGE                    COMMAND                  SERVICE      CREATED              STATUS                    PORTS
+cloudshift-p6-api          phase6-api               "sh -c 'exec uvicorn…"   api          21 seconds ago       Up 19 seconds             0.0.0.0:8080->8080/tcp, [::]:8080->8080/tcp
+cloudshift-p6-db           postgres:16-alpine       "docker-entrypoint.s…"   db           43 minutes ago       Up 43 minutes (healthy)   5432/tcp
+cloudshift-p6-frontend     phase6-frontend          "/docker-entrypoint.…"   frontend     43 minutes ago       Up 43 minutes             0.0.0.0:3000->8080/tcp, [::]:3000->8080/tcp
+cloudshift-p6-grafana      grafana/grafana:12.1.0   "/run.sh"                grafana      43 minutes ago       Up 43 minutes             0.0.0.0:3001->3000/tcp, [::]:3001->3000/tcp
+cloudshift-p6-prometheus   prom/prometheus:v3.5.0   "/bin/prometheus --c…"   prometheus   43 minutes ago       Up 43 minutes             0.0.0.0:9090->9090/tcp, [::]:9090->9090/tcp
+cloudshift-p6-shipping     phase6-shipping          "uvicorn app:app --h…"   shipping     About a minute ago   Up About a minute         0.0.0.0:9000->9000/tcp, [::]:9000->9000/tcp
+
+=== API health ===
+HTTP/1.1 200 OK
+date: Tue, 11 Aug 2026 19:31:24 GMT
+server: uvicorn
+content-length: 84
+content-type: application/json
+x-request-id: da960bff-d442-4c51-80fe-aac3a4c66805
+
+{"status":"healthy","database":"connected","version":"1.0.0","environment":"phase6"}
+=== Prometheus target ===
+{"metric": {"__name__": "up", "instance": "api:8080", "job": "cloudshift-api"}, "value": "1"}
+
+=== 5xx rate ===
+{"metric": {}, "value": "0.7275070634920636"}
+
+=== API P95 ===
+{"metric": {}, "value": "0.7220183677768598"}
+
+=== Shipping timeout total ===
+NO_DATA
+
+=== Shipping auth failure total ===
+NO_DATA
+
+=== Audit events ===
+{"count":10,"events":[{"environment":"phase6","outcome":"success","request_id":null,"metadata":{"latency_ms":154.56},"customer_id":null,"event_type":"SHIPPING_QUOTE_SUCCEEDED","service":"CloudShift","timestamp":"2026-08-11T19:30:26.729600+00:00","event_id":"c14efec9-cbc6-4e9b-98fb-d3ee6f4083e8","order_id":1},{"environment":"phase6","outcome":"success","request_id":null,"metadata":{"latency_ms":155.84},"customer_id":null,"event_type":"SHIPPING_QUOTE_SUCCEEDED","service":"CloudShift","timestamp":"2026-08-11T19:30:26.522906+00:00","event_id":"e6e8b00c-7e82-49a7-981f-3d837bc0d95e","order_id":1},{"environment":"phase6","outcome":"success","request_id":null,"metadata":{"latency_ms":154.71},"customer_id":null,"event_type":"SHIPPING_QUOTE_SUCCEEDED","service":"CloudShift","timestamp":"2026-08-11T19:30:26.323695+00:00","event_id":"bd0bbe69-5bc7-40d4-b135-47745304d8ca","order_id":1},{"environment":"phase6","outcome":"success","request_id":null,"metadata":{"latency_ms":153.74},"customer_id":null,"event_type":"SHIPPING_QUOTE_SUCCEEDED","service":"CloudShift","timestamp":"2026-08-11T19:30:26.123898+00:00","event_id":"9f4f2c52-9e30-49eb-b1a9-74865ed05fd8","order_id":1},{"environment":"phase6","outcome":"success","request_id":null,"metadata":{"latency_ms":167.18},"customer_id":null,"event_type":"SHIPPING_QUOTE_SUCCEEDED","service":"CloudShift","timestamp":"2026-08-11T19:30:25.894603+00:00","event_id":"70fc2774-b5f9-4310-a6b8-a136742e909d","order_id":1},{"environment":"phase6","outcome":"failure","request_id":null,"metadata":{"upstream_status":401},"customer_id":null,"event_type":"SHIPPING_AUTH_FAILURE","event_id":"993fdd26-c051-4b08-85ad-08ff3f5c7495","timestamp":"2026-08-11T19:30:05.302634+00:00","service":"CloudShift","order_id":1},{"environment":"phase6","outcome":"failure","request_id":null,"metadata":{"upstream_status":401},"customer_id":null,"event_type":"SHIPPING_AUTH_FAILURE","event_id":"7d45efe6-efc2-4273-86e8-6a28540cc56c","timestamp":"2026-08-11T19:30:05.229300+00:00","service":"CloudShift","order_id":1},{"environment":"phase6","outcome":"failure","request_id":null,"metadata":{"upstream_status":401},"customer_id":null,"event_type":"SHIPPING_AUTH_FAILURE","event_id":"f6a8142b-665f-406e-8464-be8508f16d35","timestamp":"2026-08-11T19:30:05.149080+00:00","service":"CloudShift","order_id":1},{"environment":"phase6","outcome":"failure","request_id":null,"metadata":{"upstream_status":401},"customer_id":null,"event_type":"SHIPPING_AUTH_FAILURE","event_id":"b04b1356-4a0e-43a1-8740-1686c1676d85","timestamp":"2026-08-11T19:30:05.074327+00:00","service":"CloudShift","order_id":1},{"environment":"phase6","outcome":"failure","request_id":null,"metadata":{"upstream_status":401},"customer_id":null,"event_type":"SHIPPING_AUTH_FAILURE","event_id":"c2f41e21-2b64-47c2-95f6-6b0f033a8f85","timestamp":"2026-08-11T19:30:04.998280+00:00","service":"CloudShift","order_id":1}]}
+=== Structured logs ===
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.684518+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"ecc9ee26-130f-458b-a419-3cb19195edf5","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":671.08}
+INFO:     192.168.65.1:32247 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.691153+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"e32ab3df-824a-4bed-926b-c7187cc69e24","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":590.0}
+INFO:     192.168.65.1:45463 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.694307+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"ea3b74a7-12d7-40d8-b79e-ff2b3a8d8739","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":659.39}
+INFO:     192.168.65.1:51124 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.818542+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"d99fa63d-af01-40ae-8650-92f9411d744b","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":715.5}
+INFO:     192.168.65.1:39991 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.822911+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"e29f36a4-c7f3-4953-be1e-f957c71a1910","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":723.54}
+INFO:     192.168.65.1:64387 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.847052+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"2404fcaa-b863-4cf7-83b2-de4a565a5825","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":715.17}
+INFO:     192.168.65.1:30325 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.869718+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"1ce7fb2f-154a-4d8b-8730-d1937031a749","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":745.64}
+INFO:     192.168.65.1:24019 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.870602+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"437640c4-a2d0-4030-802c-d53af5cbe962","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":722.57}
+INFO:     192.168.65.1:55168 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.883209+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"c89a70fe-0065-46ee-a830-0343b055d24e","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":722.16}
+INFO:     192.168.65.1:35726 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.888799+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"4349434a-9e71-42dc-a1b0-576be932978c","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":729.36}
+INFO:     192.168.65.1:44734 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.896515+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"3145a0e6-31fe-4508-8d0c-521b68dca584","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":731.95}
+INFO:     192.168.65.1:33529 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.901381+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"8ac59b85-0afd-42ed-a8c1-3f09f2600265","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":735.06}
+INFO:     192.168.65.1:40881 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.912221+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"bbf55e03-df87-4087-b396-a40aea14f8dc","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":702.24}
+INFO:     192.168.65.1:24235 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.922983+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"10c87fde-ccd9-4446-ba57-c00b1ca72736","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":726.1}
+INFO:     192.168.65.1:23903 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.946684+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"1d33b672-e557-42ee-8517-7cc547474e6f","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":621.32}
+INFO:     192.168.65.1:36012 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.992552+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"2ed1abdb-de7b-430b-a9e7-30fcda06d125","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":804.48}
+INFO:     192.168.65.1:36906 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:14.997539+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"f2f5e24a-f6fc-4c70-84e7-eb68de0f2107","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":670.05}
+INFO:     192.168.65.1:61291 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.005967+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"f29cb8f4-a0b3-4be7-b747-d5b9173263b7","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":665.39}
+INFO:     192.168.65.1:23985 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.011641+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"2104a6ca-500c-4c61-be90-7a2c6d4c1ab5","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":659.58}
+INFO:     192.168.65.1:64946 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.014261+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"dd59611f-d0bf-4e3e-9071-680d818cbdee","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":633.82}
+INFO:     192.168.65.1:27551 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.020266+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"44ad87e0-2f94-4be0-a5c0-0d7f4a855311","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":647.78}
+INFO:     192.168.65.1:50530 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.058362+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"3428ed57-5c44-4af6-9540-cfa5221d0422","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":661.64}
+INFO:     192.168.65.1:38208 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.070521+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"0354078a-1918-4e23-9bba-7ed21a835e14","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":666.61}
+INFO:     192.168.65.1:51257 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.076130+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"f3b9ede6-54ee-4ef0-b6ca-fd0fc0228ca9","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":675.92}
+INFO:     192.168.65.1:61353 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.101423+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"83f5c5f1-4975-48ac-ba6a-d878b44c7608","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":682.74}
+INFO:     192.168.65.1:64862 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.103389+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"f4a502d0-5fbc-4cf1-b525-3f9720cbaf6b","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":677.42}
+INFO:     192.168.65.1:52617 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:15.106460+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"29d5f7dc-9741-42f1-afca-459ea248ad33","http_method":"GET","http_path":"/diagnostics/db-work","http_status":200,"latency_ms":693.79}
+INFO:     192.168.65.1:45119 - "GET /diagnostics/db-work HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:18.867323+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"16f82053-0e68-4c74-83f7-8e73741c1e38","http_method":"GET","http_path":"/metrics","http_status":200,"latency_ms":2.55}
+INFO:     172.18.0.6:56188 - "GET /metrics HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:25.700333+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"da960bff-d442-4c51-80fe-aac3a4c66805","http_method":"GET","http_path":"/health","http_status":200,"latency_ms":17.05}
+INFO:     192.168.65.1:34715 - "GET /health HTTP/1.1" 200 OK
+{"severity":"INFO","message":"http_request_completed","timestamp":"2026-08-11T19:31:26.750202+00:00","service":"CloudShift","environment":"phase6","logger":"cloudshift","event":"http_request_completed","request_id":"9b0102f4-e6e4-488d-b6e6-e454c99538d3","http_method":"GET","http_path":"/audit-events","http_status":200,"latency_ms":71.15}
+INFO:     192.168.65.1:38912 - "GET /audit-events?limit=10 HTTP/1.1" 200 OK

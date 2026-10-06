@@ -1,0 +1,25 @@
+Query Plan
+----------
+Sort  (cost=3767.14..3830.22 rows=25235 width=24) (actual time=21.007..25.709 rows=25000 loops=1)
+  Sort Key: created_at DESC
+  Sort Method: quicksort  Memory: 2006kB
+  Buffers: shared hit=675
+  ->  Seq Scan on orders  (cost=0.00..1922.06 rows=25235 width=24) (actual time=0.021..12.458 rows=25000 loops=1)
+        Filter: (customer_id = '3'::smallint)
+        Rows Removed by Filter: 75005
+        Buffers: shared hit=672
+Planning:
+  Buffers: shared hit=57
+Planning Time: 2.084 ms
+Execution Time: 27.790 ms
+
+Customer Order Query Benchmark
+------------------------------
+Customer ID:     3
+Rows returned:   25,000
+Runs:            20
+Average:         142.26 ms
+Median:          128.39 ms
+P95:             246.62 ms
+Fastest:         86.61 ms
+Slowest:         248.80 ms

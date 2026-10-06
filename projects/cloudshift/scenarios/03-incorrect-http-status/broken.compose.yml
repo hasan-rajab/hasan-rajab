@@ -1,0 +1,4 @@
+services:
+  api:
+    environment:
+      SCENARIO_BAD_HTTP_STATUS: "true"

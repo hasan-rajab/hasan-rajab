@@ -1,0 +1,9 @@
+services:
+  shipping:
+    environment:
+      SHIPPING_DELAY_SECONDS: 0.15
+      SHIPPING_REQUIRED_TOKEN: cloudshift-demo-token
+  api:
+    environment:
+      SHIPPING_API_TOKEN: cloudshift-demo-token
+      SHIPPING_TIMEOUT_SECONDS: 1.0
